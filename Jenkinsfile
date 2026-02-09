@@ -32,7 +32,7 @@ pipeline {
             echo 'Pipeline execution completed'
         }
         success {
-            echo 'Pipeline SUCCESS'
+            echo 'Pipeline SUCCESS is done'
         }
         failure {
             echo 'Pipeline FAILED'
