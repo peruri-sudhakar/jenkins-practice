@@ -28,14 +28,9 @@ pipeline {
     }
 
     post {
-        always {
-            echo 'Pipeline execution completed'
-        }
         success {
-            echo 'Pipeline SUCCESS is done'
-        }
-        failure {
-            echo 'Pipeline FAILED'
+            echo 'Archiving artifacts'
+            archiveArtifacts artifacts: 'index.html', fingerprint: true
         }
     }
 }
