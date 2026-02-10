@@ -25,6 +25,16 @@ pipeline {
                 bat 'type test.sh'
             }
         }
+
+        stage('Deploy') {
+            steps {
+                echo 'Deploying application'
+                bat '''
+                if not exist D:\\deploy\\jenkins-app mkdir D:\\deploy\\jenkins-app
+                copy index.html D:\\deploy\\jenkins-app\\
+                '''
+            }
+        }
     }
 
     post {
