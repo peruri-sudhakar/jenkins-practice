@@ -5,8 +5,9 @@ pipeline {
 
         stage('Checkout') {
             steps {
-                echo 'Checking out code from GitHub'
+                echo 'Checking out code from GitHub using credentials'
                 git branch: 'main',
+                    credentialsId: 'github-creds',
                     url: 'https://github.com/peruri-sudhakar/jenkins-practice.git'
             }
         }
@@ -41,6 +42,12 @@ pipeline {
         success {
             echo 'Archiving artifacts'
             archiveArtifacts artifacts: 'index.html', fingerprint: true
+        }
+        failure {
+            echo 'Pipeline failed'
+        }
+        always {
+            echo 'Pipeline execution finished'
         }
     }
 }
