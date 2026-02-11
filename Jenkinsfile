@@ -12,36 +12,31 @@ pipeline {
             }
         }
 
-        stage('Build') {
+        stage('Build Docker Image') {
             steps {
-                echo 'Build stage running'
-                bat 'dir'
+                echo 'Building Docker image'
+                bat 'docker build -t jenkins-html-app .'
             }
         }
 
-        stage('Test') {
+        stage('Deploy Container') {
             steps {
-                echo 'Test stage running'
-                bat 'echo Running tests...'
-                bat 'type test.sh'
-            }
-        }
+                echo 'Stopping old container (if running)'
+                bat 'docker stop jenkins-container || exit 0'
+                bat 'docker rm jenkins-container || exit 0'
 
-        stage('Deploy') {
-            steps {
-                echo 'Deploying application'
-                bat '''
-                if not exist D:\\deploy\\jenkins-app mkdir D:\\deploy\\jenkins-app
-                copy index.html D:\\deploy\\jenkins-app\\
-                '''
+                echo 'Starting new container'
+                bat 'docker run -d -p 8086:80 --name jenkins-container jenkins-html-app'
             }
         }
     }
 
     post {
         success {
-            echo 'Archiving artifacts'
-            archiveArtifacts artifacts: 'index.html', fingerprint: true
+            echo 'Application deployed successfully via Docker'
+        }
+        failure {
+            echo 'Pipeline failed'
         }
         always {
             echo 'Pipeline execution finished'
